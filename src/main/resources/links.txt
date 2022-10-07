@@ -1,0 +1,4 @@
+https://en.wikipedia.org/wiki/Connection_pool
+https://www.baeldung.com/java-connection-pooling
+
+https://stackoverflow.com/questions/11881548/jpa-or-jdbc-how-are-they-different

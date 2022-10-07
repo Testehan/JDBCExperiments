@@ -1,0 +1,11 @@
+Fa un proiect nou pt DB stuff...si pune acolo in tutorial / links file linkurile importante legate de PostgreSQL
+https://www.postgresqltutorial.com/
+Trebuie sa fie pornita app Postgres ca sa ai DBul functinal..si pgAdmin 4 ca sa poti avea un UI editor
+https://postgresapp.com/
+
+Momentan in DB danteshte, in schema public, am creat un tabel nou dummy "movie"
+
+
+TODO
+- utilizeaza niste librarii care implementeaza connection pool (vezi articole)
+- mai adauga operatiuni pe DB...sau/si adauga field-uri pt Movie
