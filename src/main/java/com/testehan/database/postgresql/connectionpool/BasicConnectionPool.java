@@ -1,58 +1,68 @@
 package com.testehan.database.postgresql.connectionpool;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class BasicConnectionPool implements ConnectionPool {
 
     private static final int MAX_TIMEOUT = 5;
-    private static int INITIAL_POOL_SIZE = 10;
 
     private String url;
     private String user;
     private String password;
+    private int initialPoolSize = 10;
     private List<Connection> connectionPool;
     private List<Connection> usedConnections = new ArrayList<>();
 
-    private BasicConnectionPool(String url, String user, String password, List<Connection> connectionPool) {
-        this.url = url;
-        this.user = user;
-        this.password = password;
-        this.connectionPool = connectionPool;
+    private BasicConnectionPool() throws SQLException{
 
-//        try (InputStream input = new FileInputStream("path/to/config.properties")) {
-//
-//            Properties prop = new Properties();
-//
-//            // load a properties file
-//            prop.load(input);
-//
-//            // get the property value and print it out
-//            System.out.println(prop.getProperty("db.url"));
-//            System.out.println(prop.getProperty("db.user"));
-//            System.out.println(prop.getProperty("db.password"));
-//
-//        } catch (IOException ex) {
-//            ex.printStackTrace();
-//        }
-    }
+        readDBProperties();
 
-//    private static class LazyHolder {
-//        static final BasicConnectionPool INSTANCE = new BasicConnectionPool();
-//    }
-
-
-    public static BasicConnectionPool create(final String url, final String user, final String password) throws SQLException {
-
-        List<Connection> connectionPool = new ArrayList<>(INITIAL_POOL_SIZE);
-        for (int i = 0; i < INITIAL_POOL_SIZE; i++) {
-            connectionPool.add(createConnection(url, user, password));
+        this.connectionPool = new ArrayList<>(this.initialPoolSize);
+        for (int i = 0; i < this.initialPoolSize; i++) {
+            connectionPool.add(createConnection(this.url, this.user, this.password));
         }
-        return new BasicConnectionPool(url, user, password, connectionPool);
     }
+
+    private void readDBProperties() {
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("dbConfig.properties")) {
+
+            Properties prop = new Properties();
+            prop.load(input);
+
+            this.url = prop.getProperty("db.url");
+            this.user = prop.getProperty("db.user");
+            this.password = prop.getProperty("db.password");
+            this.initialPoolSize = new Integer(prop.getProperty("db.initialPoolSize"));
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private static class LazyHolder {
+        static final BasicConnectionPool INSTANCE;
+
+        static {
+            try {
+                INSTANCE = new BasicConnectionPool();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
+    public static BasicConnectionPool getInstance() {
+        return LazyHolder.INSTANCE;
+    }
+
 
     @Override
     public Connection getConnection() throws SQLException {

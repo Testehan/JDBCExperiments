@@ -10,15 +10,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class SimpleApp {
-
-    private static final String url = "jdbc:postgresql://localhost/danteshte";
-    private static final String user = "postgres";
-    private static final String password = "postgres";
-
     private final ConnectionPool connectionPool;
 
     public SimpleApp() throws SQLException {
-        connectionPool = BasicConnectionPool.create(url, user, password);
+        connectionPool = BasicConnectionPool.getInstance();
     }
 
     private SimpleApp close(final AutoCloseable closeable) {

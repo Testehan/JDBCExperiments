@@ -3,5 +3,9 @@ Also you can use pgAdmin 4 in order to have a UI editor.
 
 In DB "danteshte", in schema "public", I created a table "movie" which will be used through this app.
 
+When you run "mvn clean install" a default profile is chosen. If you want another profile you just need
+to run "mvn clean install -P test", and in this case, the DB connection will be made to another database (see in the
+profile the url)
+
 In order to run the app, do use the command "mvn exec:java" . This will run the main class configured
 in the pom file.

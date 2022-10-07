@@ -22,7 +22,6 @@
     </properties>
 
     <build>
-
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -30,6 +29,8 @@
                     <!-- we don't want to include the tutorial related files in the jar -->
                     <exclude>**/*.txt</exclude>
                 </excludes>
+
+                <filtering>true</filtering>
             </resource>
         </resources>
 
@@ -105,4 +106,33 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
+
+
+    <profiles>
+        <profile>
+            <id>test</id>
+            <properties>
+                <db.url>jdbc:postgresql://localhost/danteshteTest</db.url>
+                <db.user>postgres</db.user>
+                <db.password>postgres</db.password>
+                <db.initialPoolSize>5</db.initialPoolSize>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>prod</id>
+            <activation>
+                <!-- this profile is active by default ..because why not :) -->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <db.url>jdbc:postgresql://localhost/danteshte</db.url>
+                <db.user>postgres</db.user>
+                <db.password>postgres</db.password>
+                <db.initialPoolSize>10</db.initialPoolSize>
+            </properties>
+        </profile>
+    </profiles>
+
+
 </project>
