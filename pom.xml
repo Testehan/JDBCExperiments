@@ -22,6 +22,17 @@
     </properties>
 
     <build>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <!-- we don't want to include the tutorial related files in the jar -->
+                    <exclude>**/*.txt</exclude>
+                </excludes>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>com.speedment</groupId>
@@ -42,6 +53,25 @@
                         <version>${postgresql.version}</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+
+            <!-- added this plugin so that I can execute the jar. I run the app that way because I wanted to play with
+             profiles and to read the DB connection parameters from a properties file, that contains parameters
+             and that is placed inside the jar -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>com.testehan.database.postgresql.main.SimpleApp</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>

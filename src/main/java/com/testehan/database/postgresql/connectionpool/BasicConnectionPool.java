@@ -8,6 +8,7 @@ import java.util.List;
 
 public class BasicConnectionPool implements ConnectionPool {
 
+    private static final int MAX_TIMEOUT = 5;
     private static int INITIAL_POOL_SIZE = 10;
 
     private String url;
@@ -16,12 +17,33 @@ public class BasicConnectionPool implements ConnectionPool {
     private List<Connection> connectionPool;
     private List<Connection> usedConnections = new ArrayList<>();
 
-    public BasicConnectionPool(String url, String user, String password, List<Connection> connectionPool) {
+    private BasicConnectionPool(String url, String user, String password, List<Connection> connectionPool) {
         this.url = url;
         this.user = user;
         this.password = password;
         this.connectionPool = connectionPool;
+
+//        try (InputStream input = new FileInputStream("path/to/config.properties")) {
+//
+//            Properties prop = new Properties();
+//
+//            // load a properties file
+//            prop.load(input);
+//
+//            // get the property value and print it out
+//            System.out.println(prop.getProperty("db.url"));
+//            System.out.println(prop.getProperty("db.user"));
+//            System.out.println(prop.getProperty("db.password"));
+//
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
     }
+
+//    private static class LazyHolder {
+//        static final BasicConnectionPool INSTANCE = new BasicConnectionPool();
+//    }
+
 
     public static BasicConnectionPool create(final String url, final String user, final String password) throws SQLException {
 
@@ -33,8 +55,13 @@ public class BasicConnectionPool implements ConnectionPool {
     }
 
     @Override
-    public Connection getConnection() {
+    public Connection getConnection() throws SQLException {
         Connection connection = connectionPool.remove(connectionPool.size() - 1);
+
+        if(!connection.isValid(MAX_TIMEOUT)){
+            connection = createConnection(url, user, password);
+        }
+
         usedConnections.add(connection);
         return connection;
     }

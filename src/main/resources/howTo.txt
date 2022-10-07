@@ -1,0 +1,7 @@
+You need to start the Postgres app in order to have the DB functional. (https://postgresapp.com/)
+Also you can use pgAdmin 4 in order to have a UI editor.
+
+In DB "danteshte", in schema "public", I created a table "movie" which will be used through this app.
+
+In order to run the app, do use the command "mvn exec:java" . This will run the main class configured
+in the pom file.
