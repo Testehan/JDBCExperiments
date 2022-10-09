@@ -1,10 +1,17 @@
 https://www.postgresqltutorial.com/
+https://www.postgresqltutorial.com/postgresql-jdbc/query/
 
+https://stackoverflow.com/questions/52336330/design-pattern-for-database-connection
 https://en.wikipedia.org/wiki/Connection_pool
 https://www.baeldung.com/java-connection-pooling
 
-https://stackoverflow.com/questions/11881548/jpa-or-jdbc-how-are-they-different
+https://stackoverflow.com/questions/7592056/am-i-using-jdbc-connection-pooling
+https://stackoverflow.com/questions/2299469/how-should-i-connect-to-jdbc-database-datasource-in-a-servlet-based-applicatio
+https://stackoverflow.com/questions/9428573/is-it-safe-to-use-a-static-java-sql-connection-instance-in-a-multithreaded-syste
 
+https://stackoverflow.com/questions/11778102/what-is-the-right-data-type-for-unique-key-in-postgresql-db
+
+https://javarevisited.blogspot.com/2012/08/top-10-jdbc-best-practices-for-java.html
 
 TODO
 - utilizeaza niste librarii care implementeaza connection pool (vezi articole)

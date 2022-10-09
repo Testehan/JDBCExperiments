@@ -7,5 +7,5 @@ When you run "mvn clean install" a default profile is chosen. If you want anothe
 to run "mvn clean install -P test", and in this case, the DB connection will be made to another database (see in the
 profile the url)
 
-In order to run the app, do use the command "mvn exec:java" . This will run the main class configured
-in the pom file.
+In order to run the app, do use the command "mvn exec:java" (!!! I also created a runner for this MavenRunApp). This
+will run the main class configured in the pom file.
