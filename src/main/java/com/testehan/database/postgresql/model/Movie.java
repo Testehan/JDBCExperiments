@@ -1,6 +1,7 @@
 package com.testehan.database.postgresql.model;
 
 public class Movie {
+    private int movieId;
     private String title;
     private int year;
     private float rating;
@@ -17,6 +18,14 @@ public class Movie {
         this.rating = rating;
         this.director = director;
         this.description = description;
+    }
+
+    public int getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(int movieId) {
+        this.movieId = movieId;
     }
 
     public int getYear() {
@@ -57,5 +66,16 @@ public class Movie {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "title='" + title + '\'' +
+                ", year=" + year +
+                ", rating=" + rating +
+                ", director='" + director + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

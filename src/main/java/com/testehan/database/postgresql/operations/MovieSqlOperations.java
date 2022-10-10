@@ -10,25 +10,36 @@ public class MovieSqlOperations extends SqlOperationsBase{
         super();
     }
 
-    public void persistMovie(Movie movie){
+    public int insertMovie(final Movie movie){
         final String insertMovieSql = "INSERT INTO movie(title, year, rating, director, description) VALUES(?,?,?,?,?)";
+        int id = 0;
 
-        try (PreparedStatement preparedStatement = connectionPool.getConnection().prepareStatement(insertMovieSql))
+        try (PreparedStatement preparedStatement = connectionPool.getConnection().prepareStatement(insertMovieSql,Statement.RETURN_GENERATED_KEYS))
         {
             preparedStatement.setString(1,movie.getTitle());
             preparedStatement.setInt(2, movie.getYear());
             preparedStatement.setFloat(3,movie.getRating());
             preparedStatement.setString(4,movie.getDirector());
             preparedStatement.setString(5,movie.getDescription());
-            preparedStatement.execute();
 
-            System.out.println("Movie with title "+ movie.getTitle() + " was inserted in the Database");
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows > 0){
+                try (ResultSet resultSet = preparedStatement.getGeneratedKeys()){
+                    if (resultSet.next()){
+                        id = resultSet.getInt(1);
+                        movie.setMovieId(id);
+                    }
+                }
+            }
+
+            System.out.println("Movie was inserted in DB " + movie);
 
         } catch (SQLException exception){
             System.out.println(exception.getMessage());
             throw new RuntimeException(exception);
-
         }
+
+        return id;
     }
 
     public int getMovieCount(){
@@ -47,5 +58,41 @@ public class MovieSqlOperations extends SqlOperationsBase{
 
         return count;
     }
+
+    public void deleteAllMovies(){
+        final String deleteSql = "DELETE FROM movie";
+        try (Statement deleteStatement = connectionPool.getConnection().createStatement();)
+        {
+            deleteStatement.execute(deleteSql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteMoviesOlderThan(final int year){
+        final String deleteSql = "DELETE FROM movie WHERE year < ?";
+        try (PreparedStatement deleteStatement = connectionPool.getConnection().prepareStatement(deleteSql))
+        {
+            deleteStatement.setInt(1,year);
+            deleteStatement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+   public int updateMovieYearWhereTitle(final int year, final String title){
+        final String updateSql = "UPDATE movie SET year = ? WHERE title = ?";
+        int affectedRows = 0;
+        try (PreparedStatement updateStatement = connectionPool.getConnection().prepareStatement(updateSql)){
+            updateStatement.setInt(1,year);
+            updateStatement.setString(2,title);
+
+            affectedRows = updateStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return affectedRows;
+   }
 
 }

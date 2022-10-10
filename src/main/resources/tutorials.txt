@@ -1,5 +1,7 @@
 https://www.postgresqltutorial.com/
 https://www.postgresqltutorial.com/postgresql-jdbc/query/
+https://www.postgresqltutorial.com/postgresql-jdbc/insert/
+https://www.postgresqltutorial.com/postgresql-jdbc/update/
 
 https://stackoverflow.com/questions/52336330/design-pattern-for-database-connection
 https://en.wikipedia.org/wiki/Connection_pool
