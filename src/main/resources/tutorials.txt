@@ -1,5 +1,19 @@
 https://www.postgresqltutorial.com/
 https://www.postgresqltutorial.com/postgresql-jdbc/query/
+    JDBC provides you with three kinds of Statement objects:
+        Statement: you use the Statement to implement a simple SQL statement that has no parameters.
+        PreparedStatement: is the subclass of the Statement class. It gives you the ability to add
+                           the parameters to the SQL statements.
+        CallableStatement: extends the PreparedStatement class used to execute a stored procedure
+                           that may have parameters.
+        TODO Make sure to also do an example with CallableStatement
+    To execute a query, you use one of the following methods of the Statement object:
+        execute: returns true if the first object of the query is a ResultSet object. You can get the
+                 ResultSet by calling the method getResultSet.
+        executeQuery: returns only one ResultSet object.
+        executeUpdate: returns the number of rows affected by the statement. You use this method for
+                       the INSERT, DELETE, or UPDATE statement.
+
 https://www.postgresqltutorial.com/postgresql-jdbc/insert/
 https://www.postgresqltutorial.com/postgresql-jdbc/update/
 
@@ -10,6 +24,8 @@ https://www.baeldung.com/java-connection-pooling
 https://stackoverflow.com/questions/7592056/am-i-using-jdbc-connection-pooling
 https://stackoverflow.com/questions/2299469/how-should-i-connect-to-jdbc-database-datasource-in-a-servlet-based-applicatio
 https://stackoverflow.com/questions/9428573/is-it-safe-to-use-a-static-java-sql-connection-instance-in-a-multithreaded-syste
+https://stackoverflow.com/questions/22671697/try-try-with-resources-and-connection-statement-and-resultset-closing
+
 
 https://stackoverflow.com/questions/11778102/what-is-the-right-data-type-for-unique-key-in-postgresql-db
 
