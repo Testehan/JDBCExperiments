@@ -1,5 +1,6 @@
 package com.testehan.database.postgresql.operations;
 
+import com.testehan.database.postgresql.model.Actor;
 import com.testehan.database.postgresql.model.Movie;
 
 import java.sql.*;
@@ -130,27 +131,33 @@ public class MovieSqlOperations extends SqlOperationsBase{
         }
     }
 
-    public void deleteAllMovies(){
+    public int deleteAllMovies(){
         final String deleteSql = "DELETE FROM movie";
+        int affectedRows = 0;
         try (Connection connection = connectionPool.getConnection();
              Statement deleteStatement = connection.createStatement();)
         {
-            deleteStatement.execute(deleteSql);
+            affectedRows = deleteStatement.executeUpdate(deleteSql);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        return affectedRows;
     }
 
-    public void deleteMoviesOlderThan(final int year){
+    public int deleteMoviesOlderThan(final int year){
         final String deleteSql = "DELETE FROM movie WHERE year < ?";
+        int affectedRows = 0;
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement deleteStatement = connection.prepareStatement(deleteSql);)
         {
             deleteStatement.setInt(1,year);
-            deleteStatement.execute();
+            affectedRows = deleteStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        return affectedRows;
     }
 
    public int updateMovieYearWhereTitle(final int year, final String title){
@@ -168,6 +175,81 @@ public class MovieSqlOperations extends SqlOperationsBase{
             throw new RuntimeException(e);
         }
         return affectedRows;
+   }
+
+   public void insertMovieAndActor(final Movie movie, final Actor actor){
+       final String insertMovieSql = "INSERT INTO movie(title, year, rating, director, description) VALUES(?,?,?,?,?)";
+       final String insertActorSql = "INSERT INTO actor(first_name,last_name) VALUES(?,?)";
+       final String insertMovieActorSql = "INSERT INTO movie_actor(movie_id,actor_id) VALUES(?,?)";
+
+       Connection connection;
+       try {
+           connection = connectionPool.getConnection();
+       } catch (SQLException e) {
+           throw new RuntimeException(e);
+       }
+
+       try (PreparedStatement insertMovieStatement = connection.prepareStatement(insertMovieSql,Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement insertActorStatement = connection.prepareStatement(insertActorSql,Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement insertMovieActorStatement = connection.prepareStatement(insertMovieActorSql);)
+       {
+           connection.setAutoCommit(false);
+
+           insertMovieStatement.setString(1,movie.getTitle());
+           insertMovieStatement.setInt(2, movie.getYear());
+           insertMovieStatement.setFloat(3,movie.getRating());
+           insertMovieStatement.setString(4,movie.getDirector());
+           insertMovieStatement.setString(5,movie.getDescription());
+
+           int movieId = 0;
+           int affectedRows = insertMovieStatement.executeUpdate();
+           if (affectedRows > 0){
+               try (ResultSet rs = insertMovieStatement.getGeneratedKeys()){
+                   if (rs.next()){
+                       movieId = rs.getInt(1);
+                   }
+               }
+           } else {
+               connection.rollback();
+           }
+
+           insertActorStatement.setString(1,actor.getFirstName());
+           insertActorStatement.setString(2,actor.getLastName());
+
+           int actorId = 0;
+           affectedRows = insertActorStatement.executeUpdate();
+           if (affectedRows > 0){
+               try (ResultSet rs = insertActorStatement.getGeneratedKeys()){
+                   if (rs.next()){
+                       actorId = rs.getInt(1);
+                   }
+               }
+           } else {
+               connection.rollback();
+           }
+
+           insertMovieActorStatement.setInt(1,movieId);
+           insertMovieActorStatement.setInt(2,actorId);
+
+           affectedRows = insertMovieActorStatement.executeUpdate();
+           if (!(affectedRows > 0)){
+               connection.rollback();
+           }
+
+           // commit the transaction if everything is fine
+           connection.commit();
+
+       } catch (SQLException e) {
+           try {
+               System.out.println("Rolling back transaction...");
+               connection.rollback();
+           } catch (SQLException ex) {
+               throw new RuntimeException(ex);
+           }
+           throw new RuntimeException(e);
+       } finally {
+           connectionPool.releaseConnection(connection);
+       }
    }
 
 }

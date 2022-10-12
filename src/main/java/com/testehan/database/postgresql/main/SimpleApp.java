@@ -1,8 +1,10 @@
 package com.testehan.database.postgresql.main;
 
 
+import com.testehan.database.postgresql.model.Actor;
 import com.testehan.database.postgresql.model.Movie;
 import com.testehan.database.postgresql.operations.MovieSqlOperations;
+import com.testehan.database.postgresql.operations.MovieStoredFunctions;
 
 import java.security.SecureRandom;
 import java.sql.SQLException;
@@ -31,12 +33,23 @@ public class SimpleApp {
 
         System.out.println("Number of movies in the DB is " + movieSqlOperations.selectMovieCount());
 
-//        year = random.nextInt(maxYear-minYear+1)+minYear;
-//        System.out.println("Deleting all movies from the DB that are smaller than " + year);
-//        movieSqlOperations.deleteMoviesOlderThan(year);
+        year = random.nextInt(maxYear-minYear+1)+minYear;
+        System.out.println("Deleting all movies from the DB that are smaller than " + year);
+        int affectedRows = movieSqlOperations.deleteMoviesOlderThan(year);
+        System.out.println("Deleted " + affectedRows + " rows from the DB.");
 
 //        int affectedRows = movieSqlOperations.updateMovieYearWhereTitle(2003,"Lord of the rings 1575701633");
 //        System.out.println("Number of movies that were updated " + affectedRows);
+
+        movieSqlOperations.insertMovieAndActor(
+                new Movie("Harry Potter and the Goblet of Fire " + random.nextInt(), year, 7.7f, "Mike Newell","a movie about wizards"),
+                new Actor("Daniel","Radcliffe")
+        );
+
+        MovieStoredFunctions movieStoredFunctions = new MovieStoredFunctions();
+        System.out.println(movieStoredFunctions.getProperCase("this string will have uppercase for each word"));
+
+        movieStoredFunctions.selectMoviesWithTitleLikePattern("Ha%");
 
         movieSqlOperations.cleanConnections();
         System.out.println("Closing application...");
