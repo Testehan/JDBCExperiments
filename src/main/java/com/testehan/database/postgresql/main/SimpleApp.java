@@ -3,11 +3,14 @@ package com.testehan.database.postgresql.main;
 
 import com.testehan.database.postgresql.model.Actor;
 import com.testehan.database.postgresql.model.Movie;
+import com.testehan.database.postgresql.operations.MetadataSqlOperations;
 import com.testehan.database.postgresql.operations.MovieSqlOperations;
 import com.testehan.database.postgresql.operations.MovieStoredFunctions;
 
 import java.security.SecureRandom;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SimpleApp {
 
@@ -15,10 +18,10 @@ public class SimpleApp {
         System.out.println("Starting application...");
 
         MovieSqlOperations movieSqlOperations = new MovieSqlOperations();
-        movieSqlOperations.deleteAllMoviesAndRelatedActors();
+//        movieSqlOperations.deleteAllMoviesAndRelatedActors();
 
-//        MetadataSqlOperations metadataSqlOperations = new MetadataSqlOperations();
-//        metadataSqlOperations.printDatabaseTables();
+        MetadataSqlOperations metadataSqlOperations = new MetadataSqlOperations();
+        metadataSqlOperations.printDatabaseTables();
 
 
         SecureRandom random = new SecureRandom();
@@ -27,12 +30,12 @@ public class SimpleApp {
         int year = random.nextInt(maxYear-minYear+1)+minYear;
         movieSqlOperations.insertMovie(new Movie("Lord of the rings " + random.nextInt(), year, 9.1f, "Peter Jackson","a movie about a ring and hobbits"));
 
-//        List<Movie> movies = new ArrayList();
-//        for (int i=0; i<50; i++){
-//            year = random.nextInt(maxYear-minYear+1)+minYear;
-//            movies.add(new Movie("Harry Potter and the Goblet of Fire " + random.nextInt(), year, 7.7f, "Mike Newell","a movie about wizards"));
-//        }
-//        movieSqlOperations.insertMovies(movies);
+        List<Movie> movies = new ArrayList();
+        for (int i=0; i<50; i++){
+            year = random.nextInt(maxYear-minYear+1)+minYear;
+            movies.add(new Movie("Harry Potter and the Goblet of Fire " + random.nextInt(), year, 7.7f, "Mike Newell","a movie about wizards"));
+        }
+        movieSqlOperations.insertMovies(movies);
 
         System.out.println("Movie titles with a rating bigger than 8.5:");
         movieSqlOperations.selectMovieTitleWhereRatingBiggerThan(8.5f);

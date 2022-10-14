@@ -3,34 +3,34 @@ package com.testehan.database.postgresql.connectionpool;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class BasicConnectionPool implements ConnectionPool {
+public abstract class ConnectionPoolBase implements ConnectionPool{
 
-    private static final int MAX_TIMEOUT = 5;
+    protected static final int MAX_TIMEOUT = 5;
 
-    private String url;
-    private String user;
-    private String password;
-    private int initialPoolSize = 10;
-    private List<Connection> connectionPool;
-    private List<Connection> usedConnections = new ArrayList<>();
+    protected String url;
+    protected String user;
+    protected String password;
+    protected int initialPoolSize = 10;
+    protected List<Connection> connectionPool;
+    protected List<Connection> usedConnections = new ArrayList<>();
 
-    private BasicConnectionPool() throws SQLException{
-
+    public ConnectionPoolBase() throws SQLException {
         readDBProperties();
+    }
 
+    protected void initConnectionPool() throws SQLException {
         this.connectionPool = new ArrayList<>(this.initialPoolSize);
         for (int i = 0; i < this.initialPoolSize; i++) {
             connectionPool.add(createConnection(this.url, this.user, this.password));
         }
     }
 
-    private void readDBProperties() {
+    protected void readDBProperties() {
         try (InputStream input = getClass().getClassLoader().getResourceAsStream("dbConfig.properties")) {
 
             Properties prop = new Properties();
@@ -45,24 +45,6 @@ public class BasicConnectionPool implements ConnectionPool {
             ex.printStackTrace();
         }
     }
-
-    private static class LazyHolder {
-        static final BasicConnectionPool INSTANCE;
-
-        static {
-            try {
-                INSTANCE = new BasicConnectionPool();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-
-    public static BasicConnectionPool getInstance() {
-        return LazyHolder.INSTANCE;
-    }
-
 
     @Override
     public Connection getConnection() throws SQLException {
@@ -82,9 +64,7 @@ public class BasicConnectionPool implements ConnectionPool {
         return usedConnections.remove(connection);
     }
 
-    private static Connection createConnection(final String url, final String user, final String password) throws SQLException {
-        return DriverManager.getConnection(url, user, password);
-    }
+    protected abstract Connection createConnection(final String url, final String user, final String password) throws SQLException;
 
     public void shutdown() throws SQLException {
         for (Connection c : connectionPool) {
