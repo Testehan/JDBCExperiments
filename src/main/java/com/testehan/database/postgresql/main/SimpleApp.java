@@ -15,6 +15,12 @@ public class SimpleApp {
         System.out.println("Starting application...");
 
         MovieSqlOperations movieSqlOperations = new MovieSqlOperations();
+        movieSqlOperations.deleteAllMoviesAndRelatedActors();
+
+//        MetadataSqlOperations metadataSqlOperations = new MetadataSqlOperations();
+//        metadataSqlOperations.printDatabaseTables();
+
+
         SecureRandom random = new SecureRandom();
         int maxYear=2022;
         int minYear=1900;
@@ -33,10 +39,10 @@ public class SimpleApp {
 
         System.out.println("Number of movies in the DB is " + movieSqlOperations.selectMovieCount());
 
-        year = random.nextInt(maxYear-minYear+1)+minYear;
-        System.out.println("Deleting all movies from the DB that are smaller than " + year);
-        int affectedRows = movieSqlOperations.deleteMoviesOlderThan(year);
-        System.out.println("Deleted " + affectedRows + " rows from the DB.");
+//        year = random.nextInt(maxYear-minYear+1)+minYear;
+//        System.out.println("Deleting all movies from the DB that are smaller than " + year);
+//        int affectedRows = movieSqlOperations.deleteMoviesOlderThan(year);
+//        System.out.println("Deleted " + affectedRows + " rows from the DB.");
 
 //        int affectedRows = movieSqlOperations.updateMovieYearWhereTitle(2003,"Lord of the rings 1575701633");
 //        System.out.println("Number of movies that were updated " + affectedRows);

@@ -52,6 +52,7 @@ public class MovieSqlOperations extends SqlOperationsBase{
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(insertMovieSql);)
         {
+            connection.setAutoCommit(false);
             for (Movie movie : movies) {
                 preparedStatement.setString(1, movie.getTitle());
                 preparedStatement.setInt(2, movie.getYear());
@@ -67,6 +68,7 @@ public class MovieSqlOperations extends SqlOperationsBase{
                     // Call the executeBatch() method to submit a batch of the INSERT statements to
                     // the database server for execution.
                     preparedStatement.executeBatch();
+                    connection.commit();
                 }
             }
 
@@ -131,13 +133,14 @@ public class MovieSqlOperations extends SqlOperationsBase{
         }
     }
 
-    public int deleteAllMovies(){
-        final String deleteSql = "DELETE FROM movie";
+    public int deleteAllMoviesAndRelatedActors(){
+        final String deleteAllMovieActorLinks = "DELETE FROM movie_actor;DELETE FROM movie;DELETE FROM actor";
+
         int affectedRows = 0;
         try (Connection connection = connectionPool.getConnection();
              Statement deleteStatement = connection.createStatement();)
         {
-            affectedRows = deleteStatement.executeUpdate(deleteSql);
+            affectedRows = deleteStatement.executeUpdate(deleteAllMovieActorLinks);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
