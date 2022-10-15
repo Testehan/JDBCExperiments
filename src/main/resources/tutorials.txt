@@ -1,3 +1,31 @@
+https://docs.oracle.com/javase/tutorial/jdbc/basics/index.html
+
+https://docs.oracle.com/javase/tutorial/jdbc/basics/sqldatasources.html
+    DataSource objects can provide connection pooling and distributed transactions. This functionality is essential for
+    enterprise database computing. In particular, it is integral to Enterprise JavaBeans (EJB) technology.
+
+    The DataSource interface is implemented by a driver vendor. It can be implemented in three different ways:
+    -A basic DataSource implementation produces standard Connection objects that are not pooled or used in a distributed
+    transaction.
+    -A DataSource implementation that supports connection pooling produces Connection objects that participate in connection
+    pooling, that is, connections that can be recycled.
+    - A DataSource implementation that supports distributed transactions produces Connection objects that can be used in
+    a distributed transaction, that is, a transaction that accesses two or more DBMS servers.
+
+    Connection pools promote the reuse of connection objects and reduce the number of times that connection objects are
+    created. Connection pools significantly improve performance for database-intensive applications because creating
+     connection objects is costly both in terms of time and resources.
+
+https://docs.oracle.com/javase/tutorial/jdbc/basics/sqlexception.html
+    Warnings do not stop the execution of an application, as exceptions do; they simply alert the user that something
+    did not happen as planned. For example, a warning might let you know that a privilege you attempted to revoke was
+    not revoked. Or a warning might tell you that an error occurred during a requested disconnection.
+
+    A warning can be reported on a Connection object, a Statement object (including PreparedStatement and
+    CallableStatement objects), or a ResultSet object. Each of these classes has a getWarnings method, which you must
+    invoke in order to see the first warning reported on the calling object.
+
+
 https://www.postgresqltutorial.com/
 https://www.postgresqltutorial.com/postgresql-jdbc/query/
     JDBC provides you with three kinds of Statement objects:
@@ -6,7 +34,7 @@ https://www.postgresqltutorial.com/postgresql-jdbc/query/
                            the parameters to the SQL statements.
         CallableStatement: extends the PreparedStatement class used to execute a stored procedure
                            that may have parameters.
-        TODO Make sure to also do an example with CallableStatement
+
     To execute a query, you use one of the following methods of the Statement object:
         execute: returns true if the first object of the query is a ResultSet object. You can get the
                  ResultSet by calling the method getResultSet.
@@ -16,21 +44,58 @@ https://www.postgresqltutorial.com/postgresql-jdbc/query/
 
 https://www.postgresqltutorial.com/postgresql-jdbc/insert/
 https://www.postgresqltutorial.com/postgresql-jdbc/update/
+https://www.postgresqltutorial.com/postgresql-jdbc/delete/
+https://www.postgresqltutorial.com/postgresql-jdbc/transaction/Ï
+
+https://www.postgresqltutorial.com/postgresql-jdbc/call-postgresql-stored-function/
+    https://www.postgresqltutorial.com/postgresql-plpgsql/plpgsql-function-returns-a-table/
+
+https://www.pgadmin.org/docs/pgadmin4/development/function_dialog.html
+    (nice documentation on how to create various DB objects by using the pgAdmin 4 GUI application)
+
+https://zetcode.com/java/postgresql/
+    how to insert and read images from the DB and other examples
+https://www.sohamkamani.com/java/jdbc-postgresql/
 
 https://stackoverflow.com/questions/52336330/design-pattern-for-database-connection
 https://en.wikipedia.org/wiki/Connection_pool
 https://www.baeldung.com/java-connection-pooling
+https://www.baeldung.com/java-jdbc
+    Updatable ResultSet
+    Implicitly, a ResultSet object can only be traversed forward and cannot be modified.
+    If we want to use the ResultSet to update data and traverse it in both directions, we need to create the Statement
+    object with additional parameters:
+        stmt = con.createStatement(
+          ResultSet.TYPE_SCROLL_INSENSITIVE,
+          ResultSet.CONCUR_UPDATABLE
+        );
 
+https://www.baeldung.com/jpa-vs-jdbc
+https://www.baeldung.com/java-jdbc-loading-drivers
+
+https://stackoverflow.com/questions/44303082/database-independence-through-jdbc-in-java
+    https://www.jooq.org/       is mentioned ;)
 https://stackoverflow.com/questions/7592056/am-i-using-jdbc-connection-pooling
 https://stackoverflow.com/questions/2299469/how-should-i-connect-to-jdbc-database-datasource-in-a-servlet-based-applicatio
 https://stackoverflow.com/questions/9428573/is-it-safe-to-use-a-static-java-sql-connection-instance-in-a-multithreaded-syste
 https://stackoverflow.com/questions/22671697/try-try-with-resources-and-connection-statement-and-resultset-closing
 
-
 https://stackoverflow.com/questions/11778102/what-is-the-right-data-type-for-unique-key-in-postgresql-db
+https://stackoverflow.com/questions/19536513/addbatch-used-together-with-autocommit-true
+https://stackoverflow.com/questions/45091981/produce-a-datasource-object-for-postgres-jdbc-programmatically
+
 
 https://javarevisited.blogspot.com/2012/08/top-10-jdbc-best-practices-for-java.html
 
+Java Database Connectivity Theory Tutorial
+    https://www.youtube.com/watch?v=y_YxwyYRJek
+
+
+https://www.baeldung.com/hikaricp
+
 TODO
 - utilizeaza niste librarii care implementeaza connection pool (vezi articole)
-- mai adauga operatiuni pe DB...sau/si adauga field-uri pt Movie
+- 3 tutoriale text JDBC
+- 1 tutorial video JDBC
+- DAO example ...pune si in powerpoint presentation...
+- read digital ocean 40 interview questions concerning JDBC
