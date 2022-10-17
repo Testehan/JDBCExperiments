@@ -25,9 +25,25 @@ public class MetadataSqlOperations extends SqlOperationsBase{
         }
     }
 
+    public void printTransactionIsolationLevel() {
+        try (Connection connection = connectionPool.getConnection()) {
+            DatabaseMetaData dbmd = connection.getMetaData();
+
+            System.out.println("Current transaction isolation level is " + connection.getTransactionIsolation());
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void printSupportedResultSetTypes(){
         try (Connection connection = connectionPool.getConnection()) {
             DatabaseMetaData dbmd = connection.getMetaData();
+
+            System.out.println("Database name and version");
+            System.out.println(dbmd.getDatabaseProductName()+ " -- " + dbmd.getDatabaseProductVersion());
+            System.out.println("Driver name and version");
+            System.out.println(dbmd.getDriverName() + " --- " + dbmd.getDriverMajorVersion());
 
             boolean isForwardOnlySupported = dbmd.supportsResultSetType(ResultSet.TYPE_FORWARD_ONLY);
             if(isForwardOnlySupported) {
