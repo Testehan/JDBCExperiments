@@ -72,6 +72,8 @@ public class MovieSqlOperations extends SqlOperationsBase{
                 }
             }
 
+            connection.setAutoCommit(true);
+
         } catch (SQLException exception){
             System.out.println(exception.getMessage());
             throw new RuntimeException(exception);
@@ -180,6 +182,48 @@ public class MovieSqlOperations extends SqlOperationsBase{
         return affectedRows;
    }
 
+    public void updateMovieYearByMultiplingWith2(){
+        final String selectSql = "SELECT * FROM movie";
+
+        try (Connection connection = connectionPool.getConnection();
+             Statement selectStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);)
+        {
+            ResultSet updatingResultSet = selectStatement.executeQuery(selectSql);
+            while (updatingResultSet.next()) {
+                int year = updatingResultSet.getInt("year");
+                updatingResultSet.updateInt("year",year*2);
+                updatingResultSet.updateRow();
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public void insertMovieViaResultSet(final Movie movieToBeInserted){
+        final String selectSql = "SELECT * FROM movie";
+
+        try (Connection connection = connectionPool.getConnection();
+             Statement selectStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);)
+        {
+            ResultSet updatingResultSet = selectStatement.executeQuery(selectSql);
+            updatingResultSet.moveToInsertRow();
+
+            // starting from 2 because first column is the pk that is generated
+            updatingResultSet.updateString(2, movieToBeInserted.getTitle());
+            updatingResultSet.updateInt(3, movieToBeInserted.getYear());
+            updatingResultSet.updateFloat(4, movieToBeInserted.getRating());
+            updatingResultSet.updateString(5, movieToBeInserted.getDirector());
+            updatingResultSet.updateString(6, movieToBeInserted.getDescription());
+
+            updatingResultSet.insertRow();      // inserts the new row
+
+            updatingResultSet.beforeFirst();    // better to move the cursor from the newly inserted row, because if the resultset is used again, errors might appear
+
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
    public void insertMovieAndActor(final Movie movie, final Actor actor){
        final String insertMovieSql = "INSERT INTO movie(title, year, rating, director, description) VALUES(?,?,?,?,?)";
        final String insertActorSql = "INSERT INTO actor(first_name,last_name) VALUES(?,?)";
@@ -241,6 +285,8 @@ public class MovieSqlOperations extends SqlOperationsBase{
 
            // commit the transaction if everything is fine
            connection.commit();
+
+           connection.setAutoCommit(true);
 
        } catch (SQLException e) {
            try {
