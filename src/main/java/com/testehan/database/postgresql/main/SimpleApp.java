@@ -6,6 +6,7 @@ import com.testehan.database.postgresql.model.Movie;
 import com.testehan.database.postgresql.operations.MetadataSqlOperations;
 import com.testehan.database.postgresql.operations.MovieSqlOperations;
 import com.testehan.database.postgresql.operations.MovieStoredFunctions;
+import com.testehan.database.postgresql.operations.RowsetOperations;
 
 import java.security.SecureRandom;
 import java.sql.SQLException;
@@ -15,13 +16,13 @@ public class SimpleApp {
     public static void main(String... param) throws SQLException {
         System.out.println("Starting application...");
 
+        MetadataSqlOperations metadataSqlOperations = new MetadataSqlOperations();
+        metadataSqlOperations.printTransactionIsolationLevel();
+        metadataSqlOperations.printSupportedResultSetTypes();
+        metadataSqlOperations.printDatabaseTables();
+
         MovieSqlOperations movieSqlOperations = new MovieSqlOperations();
         movieSqlOperations.deleteAllMoviesAndRelatedActors();
-
-        MetadataSqlOperations metadataSqlOperations = new MetadataSqlOperations();
-        metadataSqlOperations.printDatabaseTables();
-        metadataSqlOperations.printSupportedResultSetTypes();
-
 
         SecureRandom random = new SecureRandom();
         int maxYear=2022;
@@ -58,6 +59,14 @@ public class SimpleApp {
         System.out.println(movieStoredFunctions.getProperCase("this string will have uppercase for each word"));
 
         movieStoredFunctions.selectMoviesWithTitleLikePattern("Ha%");
+
+        movieSqlOperations.updateMovieYearByMultiplingWith2();
+        movieSqlOperations.insertMovieViaResultSet(new Movie("Godfather " + random.nextInt(), 1972, 9.2f, "Francis Ford Coppola","a movie about mafia"));
+
+        RowsetOperations rowsetOperations = new RowsetOperations();
+        rowsetOperations.insertMovieViaJDBCRowSet(new Movie("Godfather part 2 " + random.nextInt(), 1974, 9.2f, "Francis Ford Coppola","a movie about mafia"));
+
+        rowsetOperations.updateAndInsertMovieViaCachedRowSet(new Movie("Godfather part 3 " + random.nextInt(), 1990, 7.6f, "Francis Ford Coppola","a movie about mafia"));
 
         movieSqlOperations.cleanConnections();
         System.out.println("Closing application...");
