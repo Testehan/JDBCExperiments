@@ -25,6 +25,98 @@ https://docs.oracle.com/javase/tutorial/jdbc/basics/sqlexception.html
     CallableStatement objects), or a ResultSet object. Each of these classes has a getWarnings method, which you must
     invoke in order to see the first warning reported on the calling object.
 
+https://docs.oracle.com/javase/tutorial/jdbc/basics/retrieving.html
+    The type of a ResultSet object determines the level of its functionality in two areas: the ways in which the cursor
+    can be manipulated, and how concurrent changes made to the underlying data source are reflected by the ResultSet
+    object.
+    The default ResultSet type is TYPE_FORWARD_ONLY.
+    The sensitivity of a ResultSet object is determined by one of three different ResultSet types:
+
+    TYPE_FORWARD_ONLY: The result set cannot be scrolled; its cursor moves forward only, from before the first row to
+        after the last row. The rows contained in the result set depend on how the underlying database generates the
+        results. That is, it contains the rows that satisfy the query at either the time the query is executed or as the
+        rows are retrieved.
+    TYPE_SCROLL_INSENSITIVE: The result can be scrolled; its cursor can move both forward and backward relative to the
+        current position, and it can move to an absolute position. The result set is insensitive to changes made to the
+        underlying data source while it is open. It contains the rows that satisfy the query at either the time the
+        query is executed or as the rows are retrieved.
+    TYPE_SCROLL_SENSITIVE: The result can be scrolled; its cursor can move both forward and backward relative to the
+        current position, and it can move to an absolute position. The result set reflects changes made to the
+        underlying data source while the result set remains open.
+
+    Note: Not all databases and JDBC drivers support all ResultSet types. The method
+    DatabaseMetaData.supportsResultSetType returns true if the specified ResultSet type is supported and false otherwise.
+
+    The concurrency of a ResultSet object determines what level of update functionality is supported.
+
+    There are two concurrency levels:
+    CONCUR_READ_ONLY: The ResultSet object cannot be updated using the ResultSet interface.
+    CONCUR_UPDATABLE: The ResultSet object can be updated using the ResultSet interface.
+
+    Calling the method Connection.commit can close the ResultSet objects that have been created during the current
+    transaction. In some cases, however, this may not be the desired behavior. The ResultSet property holdability
+    gives the application control over whether ResultSet objects (cursors) are closed when commit is called.
+    The following ResultSet constants may be supplied to the Connection methods createStatement, prepareStatement,
+    and prepareCall:
+
+    HOLD_CURSORS_OVER_COMMIT: ResultSet cursors are not closed; they are holdable: they are held open when the method
+    commit is called. Holdable cursors might be ideal if your application uses mostly read-only ResultSet objects.
+    CLOSE_CURSORS_AT_COMMIT: ResultSet objects (cursors) are closed when the commit method is called. Closing cursors
+    when this method is called can result in better performance for some applications.
+
+https://docs.oracle.com/javase/tutorial/jdbc/basics/prepared.html
+    The main feature of a PreparedStatement object is that, unlike a Statement object, it is given a SQL statement
+    when it is created. The advantage to this is that in most cases, this SQL statement is sent to the DBMS right
+    away, where it is compiled. As a result, the PreparedStatement object contains not just a SQL statement, but a
+    SQL statement that has been precompiled. This means that when the PreparedStatement is executed, the DBMS can
+    just run the PreparedStatement SQL statement without having to compile it first.
+
+    However, the most important advantage of prepared statements is that they help prevent SQL injection attacks.
+
+https://docs.oracle.com/javase/tutorial/jdbc/basics/transactions.html
+    The method Connection.setSavepoint, sets a Savepoint object within the current transaction. The Connection.rollback
+    method is overloaded to take a Savepoint argument.
+
+https://docs.oracle.com/javase/tutorial/jdbc/basics/rowset.html
+    All RowSet objects are derived from the ResultSet interface and therefore share its capabilities. What makes JDBC
+    RowSet objects special is that they add these new capabilities:
+        Function as JavaBeans Component; This means that they have the following:
+            Properties - All RowSet objects have properties. A property is a field that has corresponding getter and setter methods.
+            JavaBeans Notification Mechanism - RowSet objects use the JavaBeans event model, in which registered
+                components are notified when certain events occur. For all RowSet objects, three events trigger
+                notifications:
+                        - A cursor movement
+                        - The update, insertion, or deletion of a row
+                        - A change to the entire RowSet contents
+        Add Scrollability or Updatability - Some DBMSs do not support result sets that can be scrolled (scrollable),
+            and some do not support result sets that can be updated (updatable). If a driver for that DBMS does not add
+            the ability to scroll or update result sets, you can use a RowSet object to do it. A RowSet object is
+            scrollable and updatable by default, so by populating a RowSet object with the contents of a result set,
+            you can effectively make the result set scrollable and updatable.
+
+    A RowSet object is considered either connected or disconnected. A connected RowSet object uses a JDBC driver to
+    make a connection to a relational database and maintains that connection throughout its life span. A disconnected
+    RowSet object makes a connection to a data source only to read in data from a ResultSet object or to write data
+    back to the data source. After reading data from or writing data to its data source, the RowSet object disconnects
+    from it, thus becoming "disconnected."
+        JdbcRowSet (connected)    https://docs.oracle.com/javase/tutorial/jdbc/basics/jdbcrowset.html
+        CachedRowSet (disconected)  https://docs.oracle.com/javase/tutorial/jdbc/basics/cachedrowset.html
+            A disconnected RowSet object must call the method acceptChanges in order to save its changes to the data
+            source (DB in our case).
+        JoinRowSet (disconnected)  https://docs.oracle.com/javase/tutorial/jdbc/basics/joinrowset.html
+            A JoinRowSet implementation lets you create a SQL JOIN between RowSet objects when they are not connected
+            to a data source. This is important because it saves the overhead of having to create one or more connection
+        FilteredRowSet (disconnected)  https://docs.oracle.com/javase/tutorial/jdbc/basics/filteredrowset.html
+             A FilteredRowSet object provides a way for a disconnected RowSet object to do this filtering without
+             having to execute a query on the data source, thus avoiding having to get a connection to the data
+             source and sending queries to it.
+        WebRowSet  (disconnected) https://docs.oracle.com/javase/tutorial/jdbc/basics/webrowset.html
+            A WebRowSet object is very special because in addition to offering all of the capabilities of a CachedRowSet
+            object, it can write itself as an XML document and can also read that XML document to convert itself back
+            to a WebRowSet object. Because XML is the language through which disparate enterprises can communicate with
+            each other, it has become the standard for Web Services communication. As a consequence, a WebRowSet object
+            fills a real need by enabling Web Services to send and receive data from a database in the form of an XML document.
+
 
 https://www.postgresqltutorial.com/
 https://www.postgresqltutorial.com/postgresql-jdbc/query/
@@ -94,8 +186,6 @@ Java Database Connectivity Theory Tutorial
 https://www.baeldung.com/hikaricp
 
 TODO
-- utilizeaza niste librarii care implementeaza connection pool (vezi articole)
-- 3 tutoriale text JDBC
-- 1 tutorial video JDBC
 - DAO example ...pune si in powerpoint presentation...
+    added a code example in this app
 - read digital ocean 40 interview questions concerning JDBC
