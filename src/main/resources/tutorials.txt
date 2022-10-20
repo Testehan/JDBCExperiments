@@ -78,6 +78,7 @@ https://docs.oracle.com/javase/tutorial/jdbc/basics/transactions.html
     method is overloaded to take a Savepoint argument.
 
 https://docs.oracle.com/javase/tutorial/jdbc/basics/rowset.html
+https://www.baeldung.com/java-jdbc-rowset   (shorter version for RowSets)
     All RowSet objects are derived from the ResultSet interface and therefore share its capabilities. What makes JDBC
     RowSet objects special is that they add these new capabilities:
         Function as JavaBeans Component; This means that they have the following:
@@ -175,7 +176,7 @@ https://stackoverflow.com/questions/22671697/try-try-with-resources-and-connecti
 https://stackoverflow.com/questions/11778102/what-is-the-right-data-type-for-unique-key-in-postgresql-db
 https://stackoverflow.com/questions/19536513/addbatch-used-together-with-autocommit-true
 https://stackoverflow.com/questions/45091981/produce-a-datasource-object-for-postgres-jdbc-programmatically
-
+https://stackoverflow.com/questions/178479/preparedstatement-in-clause-alternatives
 
 https://javarevisited.blogspot.com/2012/08/top-10-jdbc-best-practices-for-java.html
 
@@ -184,6 +185,9 @@ Java Database Connectivity Theory Tutorial
 
 
 https://www.baeldung.com/hikaricp
+
+Interview questions about JDBC
+https://www.digitalocean.com/community/tutorials/jdbc-interview-questions-and-answers
 
 TODO
 - DAO example ...pune si in powerpoint presentation...
