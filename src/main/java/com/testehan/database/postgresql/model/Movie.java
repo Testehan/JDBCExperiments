@@ -8,8 +8,7 @@ public class Movie {
     private String director;
     private String description;
 
-    public Movie(String title){
-        this.title = title;
+    public Movie(){
     }
 
     public Movie(String title, int year, float rating, String director, String description) {
