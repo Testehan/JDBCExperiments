@@ -186,10 +186,11 @@ Java Database Connectivity Theory Tutorial
 
 https://www.baeldung.com/hikaricp
 
-Interview questions about JDBC
+80 Interview questions about JDBC
 https://www.digitalocean.com/community/tutorials/jdbc-interview-questions-and-answers
 
 TODO
-- DAO example ...pune si in powerpoint presentation...
-    added a code example in this app
-- read digital ocean 40 interview questions concerning JDBC
+- DAO (is mentioned in the hibernate book as well, so i would leave these patterns until I also complete the
+JPA / Hibernate learnings ) + object pool ...add in design patterns powerpoint presentation (after hibernate stuff)...
+    added a code example in this app (for DAO ..)
+
