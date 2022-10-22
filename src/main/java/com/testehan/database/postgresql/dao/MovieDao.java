@@ -38,7 +38,7 @@ public class MovieDao extends SqlOperationsBase implements Dao<Movie>{
             throw new RuntimeException(e);
         }
 
-        return Optional.of(returnedMovie);
+        return Optional.ofNullable(returnedMovie);
     }
 
     @Override

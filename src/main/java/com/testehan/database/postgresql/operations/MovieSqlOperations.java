@@ -122,6 +122,7 @@ public class MovieSqlOperations extends SqlOperationsBase{
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(selectSql);)
         {
+            preparedStatement.setFetchSize(100);
             preparedStatement.setFloat(1,rating);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
