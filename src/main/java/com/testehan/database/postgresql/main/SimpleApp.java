@@ -3,10 +3,7 @@ package com.testehan.database.postgresql.main;
 
 import com.testehan.database.postgresql.model.Actor;
 import com.testehan.database.postgresql.model.Movie;
-import com.testehan.database.postgresql.operations.MetadataSqlOperations;
-import com.testehan.database.postgresql.operations.MovieSqlOperations;
-import com.testehan.database.postgresql.operations.MovieStoredFunctions;
-import com.testehan.database.postgresql.operations.RowsetOperations;
+import com.testehan.database.postgresql.operations.*;
 
 import java.security.SecureRandom;
 import java.sql.SQLException;
@@ -15,6 +12,9 @@ public class SimpleApp {
 
     public static void main(String... param) throws SQLException {
         System.out.println("Starting application...");
+
+        TableSqlOperations tableSqlOperations = new TableSqlOperations();
+        tableSqlOperations.createTable();
 
         MetadataSqlOperations metadataSqlOperations = new MetadataSqlOperations();
         metadataSqlOperations.printTransactionIsolationLevel();
